@@ -19,12 +19,16 @@ public class Calculator {
 
     static List<Locomotive> oldListLocomotives;
     static List<Locomotive> newListLocomotives;
-    public static List<GetterLocomotivesForTable> tableOfLocomotives;
+    public static List<TableLocomotives> tableOfLocomotives;
 
     public void GetListLocomotives(){
 
 
         GetterLocomotive getterLocomotive =  new GetterLocomotive();
+
+
+
+
         oldListLocomotives = getterLocomotive.GetLocomotives(ApplicationWindow.applicationWindow.pathOfOldFile.getText());
         newListLocomotives = getterLocomotive.GetLocomotives(ApplicationWindow.applicationWindow.pathOfNewFile.getText());
 
@@ -36,9 +40,9 @@ public class Calculator {
 
     }
 
-    List<GetterLocomotivesForTable> GetAllLocomotivesWithoutInDepot(List<GetterLocomotivesForTable> tableOfLocomotives){
+    List<TableLocomotives> GetAllLocomotivesWithoutInDepot(List<TableLocomotives> tableOfLocomotives){
 
-        List<GetterLocomotivesForTable> list = new ArrayList<>();
+        List<TableLocomotives> list = new ArrayList<>();
         for (int i = 0; i < tableOfLocomotives.size(); i++) {
             if (tableOfLocomotives.get(i).getEndDateOfTheMileage() != "ОТЦЕПЛЕН"){
                 list.add(tableOfLocomotives.get(i));
@@ -46,9 +50,9 @@ public class Calculator {
         }
 
         //сортировка по количеству дней до отцепки
-        list.sort(new Comparator<GetterLocomotivesForTable>() {
+        list.sort(new Comparator<TableLocomotives>() {
             @Override
-            public int compare(GetterLocomotivesForTable o1, GetterLocomotivesForTable o2) {
+            public int compare(TableLocomotives o1, TableLocomotives o2) {
                 if (o1.getRemainingMileageDays() == o2.getRemainingMileageDays()) return 0;
                 else if(o1.getRemainingMileageDays() > o2.getRemainingMileageDays()) return 1;
                 else return -1;
@@ -97,7 +101,7 @@ public class Calculator {
         String numberWithoutLastChar = (currentLocomotive.getNumber()).substring(0,currentLocomotive.getNumber().length()-1);
 
 
-        GetterLocomotivesForTable locomotiveForTable = new GetterLocomotivesForTable.Builder().
+        TableLocomotives locomotiveForTable = new TableLocomotives.Builder().
                 setSeries(currentLocomotive.getSeries()).
                 setNumber(numberWithoutLastChar).
                 setStatus(currentLocomotive.getStatus()).
@@ -113,12 +117,12 @@ public class Calculator {
     }
 
     //возвращаем список локомотивов без дупликатов
-    List<GetterLocomotivesForTable> GetNonRepeatingLocomotives(List<GetterLocomotivesForTable> locomotives) {
+    List<TableLocomotives> GetNonRepeatingLocomotives(List<TableLocomotives> locomotives) {
 
 
-        List<GetterLocomotivesForTable> currentListLocomotives = new ArrayList<>();
+        List<TableLocomotives> currentListLocomotives = new ArrayList<>();
 
-        GetterLocomotivesForTable currentLocomotive;
+        TableLocomotives currentLocomotive;
 
         for (int i = 0; i < locomotives.size(); i++) {
             if (locomotives.get(i) != null) {

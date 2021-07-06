@@ -1,6 +1,6 @@
 package MonitoringOfLocomotiveMileages.Model;
 
-public class GetterLocomotivesForTable {
+public class TableLocomotives {
 
     String series;
     String number;
@@ -51,7 +51,7 @@ public class GetterLocomotivesForTable {
     }
 
 
-    public GetterLocomotivesForTable(Builder builder) {
+    public TableLocomotives(Builder builder) {
         this.series = builder.series;
         this.number = builder.number;
         this.status = builder.status;
@@ -123,8 +123,8 @@ public class GetterLocomotivesForTable {
             return this;
         }
 
-        public GetterLocomotivesForTable build() {
-            return new GetterLocomotivesForTable(this);
+        public TableLocomotives build() {
+            return new TableLocomotives(this);
         }
 
 

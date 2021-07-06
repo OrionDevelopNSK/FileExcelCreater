@@ -1,13 +1,11 @@
 package MonitoringOfLocomotiveMileages.Controller;
 
-import MonitoringOfLocomotiveMileages.Model.GetterLocomotivesForTable;
+import MonitoringOfLocomotiveMileages.Model.TableLocomotives;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class CreatorExcelFile {
 
@@ -15,7 +13,7 @@ public class CreatorExcelFile {
     final String sheetName = "Пробеги";
 
 
-    public void CreateFile(List<GetterLocomotivesForTable> finalTableOfLocomotives) {
+    public void CreateFile(List<TableLocomotives> finalTableOfLocomotives) {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
 
@@ -27,7 +25,7 @@ public class CreatorExcelFile {
         int countRow = finalTableOfLocomotives.size();
 
 
-        var methods = GetterLocomotivesForTable.class.getDeclaredMethods();
+        var methods = TableLocomotives.class.getDeclaredMethods();
         int countCell = methods.length;
 
 
