@@ -52,15 +52,13 @@ public class Locomotive {
             this.series = series;
             return this;
         }
-        public Builder withNumberButWithoutLastSimbol(String number){
+        public Builder withNumber(String number){
 
             if (number.length() > 0 ){
 
                 //удаляем нули перед номером если есть
                 number = number.replaceFirst("^(?<=^)0+", "");
 
-                //удаляем букву секции в конце номера
-                number = number.substring(0,number.length()-1);
             }
             this.number = number;
             return this;

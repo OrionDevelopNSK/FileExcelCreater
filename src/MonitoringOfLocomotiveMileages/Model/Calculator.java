@@ -18,52 +18,30 @@ public class Calculator {
 
     final static int maximumPermissibleMileage = 50000;
 
-    public static List<GetterLocomotivesForTable> finalTableOfLocomotives;
+    public static List<GetterLocomotivesForTable> tableOfLocomotives;
+
+
 
     public void GetListLocomotives(){
 
 
         GetterLocomotive getterLocomotive =  new GetterLocomotive();
-        oldListLocomotives = getterLocomotive.GetNonRepeatingLocomotives(ApplicationWindow.applicationWindow.pathOfOldFile.getText());
-        newListLocomotives = getterLocomotive.GetNonRepeatingLocomotives(ApplicationWindow.applicationWindow.pathOfNewFile.getText());
+        oldListLocomotives = getterLocomotive.GetLocomotives(ApplicationWindow.applicationWindow.pathOfOldFile.getText());
+        newListLocomotives = getterLocomotive.GetLocomotives(ApplicationWindow.applicationWindow.pathOfNewFile.getText());
 
-        finalTableOfLocomotives = new ArrayList<>();
-
+        tableOfLocomotives = new ArrayList<>();
 
         SearchForTwoIdenticalLocomotives();
 
-        List<GetterLocomotivesForTable> list = finalTableOfLocomotives;
-
-        /*for (int i = 0; i < list.size(); i++) {
-
-            GetterLocomotivesForTable currentElementOfTableLocomotive = list.get(i);
-            System.out.println(
-                    currentElementOfTableLocomotive.getSeries()+ "\t"
-                    + currentElementOfTableLocomotive.getNumber()+ "\t"
-                    + currentElementOfTableLocomotive.getStatus()+ "\t"
-                    + currentElementOfTableLocomotive.getMileage()+ "\t"
-                    + currentElementOfTableLocomotive.getRemainingMileage()+ "\t"
-                    + currentElementOfTableLocomotive.getAverageMileage()+ "\t"
-                    + currentElementOfTableLocomotive.getRemainingMileageDays()+ "\t"
-                    + currentElementOfTableLocomotive.getEndDateOfTheMileage()+ "\t");
-
-            System.out.println("\n");
-        }*/
-
-
-        new CreatorExcelFile().CreateFile(list);
+        new CreatorExcelFile().CreateFile(GetNonRepeatingLocomotives(tableOfLocomotives));
 
     }
 
 
     public void SearchForTwoIdenticalLocomotives(){
 
-
-
         for (int i = 0; i < newListLocomotives.size(); i++) {
             Locomotive currentLocomotives = newListLocomotives.get(i);
-
-
 
             for (int j = 0; j < oldListLocomotives.size(); j++) {
 
@@ -85,10 +63,13 @@ public class Calculator {
         int remainingMileageDays = CalculationEndOfTheMileage(currentLocomotive.getMileage(), averageMileage);
         String endDateOfTheMileage = CalculationEndDateOfTheMileage(remainingMileageDays);
 
+        //убираем последний символ буквы в номере локомотива
+        String numberWithoutLastChar = (currentLocomotive.getNumber()).substring(0,currentLocomotive.getNumber().length()-1);
+
 
         GetterLocomotivesForTable locomotiveForTable = new GetterLocomotivesForTable.Builder().
                 setSeries(currentLocomotive.getSeries()).
-                setNumber(currentLocomotive.getNumber()).
+                setNumber(numberWithoutLastChar).
                 setStatus(currentLocomotive.getStatus()).
                 setOldMileage(oldLocomotive.getMileage()).
                 setNewMileage(currentLocomotive.getMileage()).
@@ -98,8 +79,36 @@ public class Calculator {
                 setEndDateOfTheMileage(endDateOfTheMileage).
                 build();
 
-        finalTableOfLocomotives.add(locomotiveForTable);
+        tableOfLocomotives.add(locomotiveForTable);
     }
+
+
+    public List<GetterLocomotivesForTable> GetNonRepeatingLocomotives(List<GetterLocomotivesForTable> locomotives) {
+
+
+        List<GetterLocomotivesForTable> currentListLocomotives = new ArrayList<>();
+
+        GetterLocomotivesForTable currentLocomotive;
+
+        for (int i = 0; i < locomotives.size(); i++) {
+            if (locomotives.get(i) != null) {
+                currentLocomotive = locomotives.get(i);
+                for (int j = 0; j < locomotives.size(); j++) {
+                    if (locomotives.get(j) != null) {
+                        if (currentLocomotive.getNumber() == locomotives.get(j).getNumber()) {
+
+                            locomotives.remove(i);
+
+                        }
+                    }
+                }
+                currentListLocomotives.add(currentLocomotive);
+            }
+        }
+
+        return currentListLocomotives;
+    }
+
 
 
 
@@ -141,7 +150,7 @@ public class Calculator {
 
     String CalculationEndDateOfTheMileage(int remainingMileageDays){
 
-        if (remainingMileageDays <= 0) return "ОТЦЕПЛЕН";
+        if (remainingMileageDays < 0) return "ОТЦЕПЛЕН";
 
         Calendar currentData = Calendar.getInstance();
         currentData.add(Calendar.DAY_OF_MONTH, remainingMileageDays);
