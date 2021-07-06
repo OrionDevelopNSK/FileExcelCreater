@@ -17,9 +17,8 @@ public class ImporterExcelFile {
         try{
 
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filename));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
+            return new HSSFWorkbook(fs);
 
-            return wb;
         }
         catch (Exception e){
             System.out.println("ERROR, FILE NOT OPENED");

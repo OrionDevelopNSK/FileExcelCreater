@@ -1,6 +1,5 @@
 package MonitoringOfLocomotiveMileages.View;
 
-import MonitoringOfLocomotiveMileages.Controller.BrowserFiles;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

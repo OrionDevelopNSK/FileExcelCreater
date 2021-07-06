@@ -4,15 +4,18 @@ import MonitoringOfLocomotiveMileages.Model.GetterLocomotivesForTable;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class CreatorExcelFile {
 
 
     final String sheetName = "Пробеги";
 
-    public void CreateFile(List<GetterLocomotivesForTable> finalTableOfLocomotives){
+
+    public void CreateFile(List<GetterLocomotivesForTable> finalTableOfLocomotives) {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
 
@@ -28,7 +31,6 @@ public class CreatorExcelFile {
         int countCell = methods.length;
 
 
-
         for (int i = 0; i < countRow; i++) {
             Row currentRow = sheet.createRow(i);
 
@@ -42,12 +44,6 @@ public class CreatorExcelFile {
             currentRow.createCell(7).setCellValue(finalTableOfLocomotives.get(i).getRemainingMileageDays());
             currentRow.createCell(8).setCellValue(finalTableOfLocomotives.get(i).getEndDateOfTheMileage());
 
-           /* for (int j = 0; j < countCell; j++) {
-                Cell currentCell = currentRow.createCell(j);
-
-
-
-            }*/
         }
 
         ExporterExcelFile.ExportExcelFile(workbook);

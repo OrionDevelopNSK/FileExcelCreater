@@ -2,11 +2,11 @@ package MonitoringOfLocomotiveMileages.Model;
 
 public class Locomotive {
 
-    private String series;
-    private String number;
-    private String location;
-    private String status;
-    private int mileage;
+    private final String series;
+    private final String number;
+    private final String location;
+    private final String status;
+    private final int mileage;
 
 
     public String getSeries() {

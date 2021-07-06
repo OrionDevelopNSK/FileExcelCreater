@@ -8,12 +8,13 @@ import java.util.*;
 
 public class GetterLocomotive {
 
+
+    //столбцы в Excel с обрабатываемой информацией
     private final int columnNumberOfseries = 3;
     private final int columnNumberOfNumber = 4;
     private final int columnNumberOfLocation = 9;
     private final int columnNumberOfStatus = 11;
     private final int columnNumberOfMileage = 28;
-
     private final int startRowWithInformation = 5;
     private final int finishRowWithInformation = 417;
 

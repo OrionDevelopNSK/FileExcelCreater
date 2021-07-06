@@ -6,21 +6,20 @@ import MonitoringOfLocomotiveMileages.View.ApplicationWindow;
 
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Calculator {
 
+
+    //предельный пробег локомотива
+    final static int maximumPermissibleMileage = 50000;
+    //список состояний локомотива находящегося в депо
+    final List<String> statesOff = List.of("ОЖ.ПЕР.РЕМ", "TP1+TO4", "TP-1","TP-2", "TP-3");
+
+
     static List<Locomotive> oldListLocomotives;
     static List<Locomotive> newListLocomotives;
-
-    final static int maximumPermissibleMileage = 50000;
-
     public static List<GetterLocomotivesForTable> tableOfLocomotives;
-
-
 
     public void GetListLocomotives(){
 
@@ -33,12 +32,37 @@ public class Calculator {
 
         SearchForTwoIdenticalLocomotives();
 
-        new CreatorExcelFile().CreateFile(GetNonRepeatingLocomotives(tableOfLocomotives));
+        new CreatorExcelFile().CreateFile(GetNonRepeatingLocomotives(GetAllLocomotivesWithoutInDepot(tableOfLocomotives)));
 
     }
 
+    List<GetterLocomotivesForTable> GetAllLocomotivesWithoutInDepot(List<GetterLocomotivesForTable> tableOfLocomotives){
 
-    public void SearchForTwoIdenticalLocomotives(){
+        List<GetterLocomotivesForTable> list = new ArrayList<>();
+        for (int i = 0; i < tableOfLocomotives.size(); i++) {
+            if (tableOfLocomotives.get(i).getEndDateOfTheMileage() != "ОТЦЕПЛЕН"){
+                list.add(tableOfLocomotives.get(i));
+            }
+        }
+
+        //сортировка по количеству дней до отцепки
+        list.sort(new Comparator<GetterLocomotivesForTable>() {
+            @Override
+            public int compare(GetterLocomotivesForTable o1, GetterLocomotivesForTable o2) {
+                if (o1.getRemainingMileageDays() == o2.getRemainingMileageDays()) return 0;
+                else if(o1.getRemainingMileageDays() > o2.getRemainingMileageDays()) return 1;
+                else return -1;
+            }
+        });
+
+        return list;
+    }
+
+
+
+
+    //сравниваем одинаковые локомотивы из разных таблиц для дальнейших расчетов
+    void SearchForTwoIdenticalLocomotives(){
 
         for (int i = 0; i < newListLocomotives.size(); i++) {
             Locomotive currentLocomotives = newListLocomotives.get(i);
@@ -57,11 +81,17 @@ public class Calculator {
     }
 
     void SetTableLocomotives(Locomotive currentLocomotive, Locomotive oldLocomotive){
+
+        //разница пробегов локомотивов
         int differenceOfMileage = CalculateDifferenceOfMileage(currentLocomotive, oldLocomotive);
+        //остаток пробега до отцепки
         int remainingMileage = CalculateRemainingMileage(currentLocomotive.getMileage());
+        //средний пробег за 10 дней
         int averageMileage = CalculationTheAverageMileageForTenDay(differenceOfMileage);
+        //расчетное количество дней до отцепки
         int remainingMileageDays = CalculationEndOfTheMileage(currentLocomotive.getMileage(), averageMileage);
-        String endDateOfTheMileage = CalculationEndDateOfTheMileage(remainingMileageDays);
+        //дата отцепки, при условии что локомотив еще не отцеплен
+        String endDateOfTheMileage = CalculationEndDateOfTheMileage(remainingMileageDays, currentLocomotive);
 
         //убираем последний символ буквы в номере локомотива
         String numberWithoutLastChar = (currentLocomotive.getNumber()).substring(0,currentLocomotive.getNumber().length()-1);
@@ -82,8 +112,8 @@ public class Calculator {
         tableOfLocomotives.add(locomotiveForTable);
     }
 
-
-    public List<GetterLocomotivesForTable> GetNonRepeatingLocomotives(List<GetterLocomotivesForTable> locomotives) {
+    //возвращаем список локомотивов без дупликатов
+    List<GetterLocomotivesForTable> GetNonRepeatingLocomotives(List<GetterLocomotivesForTable> locomotives) {
 
 
         List<GetterLocomotivesForTable> currentListLocomotives = new ArrayList<>();
@@ -141,25 +171,26 @@ public class Calculator {
             return (int)Math.floor((maximumPermissibleMileage - mileage) / averageMileage);
         }
         catch (ArithmeticException e){
-            System.out.println("деление на нуль");
             return -1;
         }
 
 
     }
 
-    String CalculationEndDateOfTheMileage(int remainingMileageDays){
+    String CalculationEndDateOfTheMileage(int remainingMileageDays, Locomotive locomotive){
 
-        if (remainingMileageDays < 0) return "ОТЦЕПЛЕН";
+        if (remainingMileageDays < 0 || statesOff.contains(locomotive.getStatus())) return "ОТЦЕПЛЕН";
 
         Calendar currentData = Calendar.getInstance();
         currentData.add(Calendar.DAY_OF_MONTH, remainingMileageDays);
         Date date = currentData.getTime();
 
-        //форматирование строки времени
+        //форматирование строки даты
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         return formatter.format(date);
     }
+
+
 
 
 
