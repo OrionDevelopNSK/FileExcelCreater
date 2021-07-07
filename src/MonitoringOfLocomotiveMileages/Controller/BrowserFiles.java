@@ -15,8 +15,14 @@ public class BrowserFiles {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("EXCEL FILES", "*.xls"));
         File selectedFile = fileChooser.showOpenDialog(mainStage);
-        String str = selectedFile.getPath().replace("\\", "\\\\");
-        textField.setText(str);
+
+
+        if (selectedFile != null){
+            String str = selectedFile.getPath().replace("\\", "\\\\");
+            textField.setText(str);
+        }
+
+
 
 
     }

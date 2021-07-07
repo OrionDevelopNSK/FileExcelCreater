@@ -14,7 +14,7 @@ public class Calculator {
     //предельный пробег локомотива
     final static int maximumPermissibleMileage = 50000;
     //список состояний локомотива находящегося в депо
-    final List<String> statesOff = List.of("ОЖ.ПЕР.РЕМ", "TP1+TO4", "TP-1","TP-2", "TP-3");
+    final List<String> statesOff = List.of("ОЖ.ПЕР.РЕМ", "TP1+TO4", "TP-1","TP-2", "TP-3", "КОНСЕРВАЦИЯ");
 
 
     static List<Locomotive> oldListLocomotives;
